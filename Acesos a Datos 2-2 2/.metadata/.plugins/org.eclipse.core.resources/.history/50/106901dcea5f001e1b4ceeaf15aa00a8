@@ -1,0 +1,190 @@
+package TipoExamen;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Scanner;
+
+public class Principal {
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		
+		File fichero=new File("./Alumnos.dat");
+		RandomAccessFile file;
+		
+		File ficheroNota=new File("./Notas.dat");
+		RandomAccessFile file2;
+		
+		
+		try {
+			file = new RandomAccessFile(fichero,"rw");
+			file2=new RandomAccessFile(ficheroNota,"rw");
+			
+			Scanner sn = new Scanner(System.in);
+		       boolean salir = false;
+		       int opcion; //Guardaremos la opcion del usuario
+		        
+		       while(!salir){
+		            
+		           System.out.println("1. Listar alumnos");
+		           System.out.println("2. Listar notas");
+		           System.out.println("3. Actualizar el fichero Alumno");
+		           System.out.println("4. Generar el fichero ALumnos.xml");
+		           System.out.println("5. Salir");
+		            
+		           System.out.println("Escribe una de las opciones");
+		           opcion = sn.nextInt();
+		            
+		           switch(opcion){
+		               case 1:
+		                   System.out.println("Has seleccionado la opcion 1");
+		                   leerAlumnos(file);
+		                   break;
+		               case 2:
+		                   System.out.println("Has seleccionado la opcion 2");
+		                   leerNotas(file2);
+		                   break;
+		                case 3:
+		                   System.out.println("Has seleccionado la opcion 3");
+		                   actualizarAlumnos(file2);
+		                   break;
+		                case 4:
+			                   System.out.println("Has seleccionado la opcion 3");
+			                   break;
+		                case 5:
+		                   salir=true;
+		                   break;
+		                default:
+		                   System.out.println("Solo números entre 1 y 4");
+		           }
+		            
+		       }
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+
+	}
+
+
+	private static void actualizarAlumnos(RandomAccessFile file2, int idAlumno,float nueva) {
+		// TODO Auto-generated method stub
+		
+			int posi=0;
+			int codAlumno;
+			float notaAsignatura;
+			for(;;) {
+				try {
+					file2.seek(posi);
+					codAlumno=file2.readInt();
+					String nombreAsignatura="";
+					for(int i=0;i<20;i++) {
+						nombreAsignatura+=file2.readChar();
+					}
+					notaAsignatura=file2.readInt();
+					
+					if(codAlumno==idAlumno) {
+						long punt=file2.getFilePointer();
+						notaAsignatura=file2.readInt();
+						float notaNueva=notaAsignatura+nueva;
+						file2.seek(punt);
+						file2.writeDouble(notaNueva);
+					}
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	
+
+
+
+
+
+
+
+	private static void leerNotas(RandomAccessFile file2) throws IOException {
+		// TODO Auto-generated method stub
+		
+		int codAlum;
+		float notaAsig;
+		int cont=1;
+		
+		System.out.printf("%5s %7s %20s %5s%n","REGIS","NUMALUM","ASIGNATURA","NOTA");
+		System.out.printf("%5s %7s %20s %5s%n","-----","-------","--------------------","-----");
+		
+		for(;;) {
+			
+			codAlum=file2.readInt();
+			String asignatura="";
+			for( int i=0;i<20;i++) {
+				asignatura+=file2.readChar();
+			}
+			notaAsig=file2.readFloat();
+			
+			
+			
+			System.out.printf("%5s %7s %20s %5s%n",cont,codAlum,asignatura.trim(),notaAsig);
+			
+			cont++;
+			
+			if (file2.getFilePointer()==file2.length())break;
+			
+		}
+		
+		file2.close();
+		
+	}
+
+	private static void leerAlumnos(RandomAccessFile file) throws IOException {
+		// TODO Auto-generated method stub
+		int codAlum,numAsig,posi;
+		float notaMedia;
+		
+		
+		posi=0;
+		
+		System.out.printf("%7s %-20s %-20s %7s %9s%n", "NUMALUM", "NOMBRE", "LOCALIDAD", "NUMASIG", "NOTAMEDIA");
+		System.out.printf("%7s %-20s %-20s %7s %9s%n", "-------", "--------------------", "--------------------", "-------", "---------");
+		
+		for(;;) {
+			String nombre="";
+			String localidad="";
+			file.seek(posi);
+			codAlum=file.readInt();
+			
+			for(int i=0;i<20;i++) {
+				nombre+=file.readChar();
+				
+			}
+			for(int i=0;i<20;i++) {
+				localidad+=file.readChar();
+			}
+			numAsig=file.readInt();
+			notaMedia=file.readFloat();
+			
+			System.out.printf("%7s %-20s %-20s %7s %9s%n", codAlum, nombre.trim(), localidad.trim(), numAsig, notaMedia);
+			
+			posi=posi+92;
+			
+			if (file.getFilePointer()==file.length())break;
+			
+		}
+		
+		 file.close();
+		
+	}
+
+
+	
+
+}

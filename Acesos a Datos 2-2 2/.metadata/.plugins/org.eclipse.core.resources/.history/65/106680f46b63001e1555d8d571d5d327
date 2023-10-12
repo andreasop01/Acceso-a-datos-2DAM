@@ -1,0 +1,17 @@
+package examenCursoPasado;
+
+import java.io.File;
+import java.io.RandomAccessFile;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		File ficheroProducto=new File("./Productos.dat");
+		RandomAccessFile fileProducto;
+		File ficheroDatosVentas=new File("./DatosdeVentas");
+
+	}
+
+}

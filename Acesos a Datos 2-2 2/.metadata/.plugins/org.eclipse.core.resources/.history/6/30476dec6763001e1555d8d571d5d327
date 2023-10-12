@@ -1,0 +1,13 @@
+package examenCursoPasado;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		File ficheroProducto=new File(".\Productos.dat");
+		
+
+	}
+
+}
